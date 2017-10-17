@@ -21,7 +21,7 @@
 //#include "leetcode/minimumSizeSubarraySum.cpp"
 //#include "leetcode/findAllAnagramsinaString.cpp"
 //#include "leetcode/search/intersectionofTwoArrays.cpp"
-#include "leetcode/search/intersectionofTwoArrays.cpp"
+#include "leetcode/search/intersectionofTwoArrays2.cpp"
 
 
 using namespace std;
@@ -29,14 +29,13 @@ using namespace std;
 
 int main() {
     vector<int> vector1 = {1, 2, 3, 2};
-    vector<int> vector2 = {1, 2};
+    vector<int> vector2 = {1, 2, 2, 2};
     intersectionofTwoArrays::Solution s;
     vector<int> res = s.intersection(vector1, vector2);
     auto itor = res.begin();
     for (; itor != res.end(); itor++) {
         cout << *itor << " ";
     }
-
 //    vector
 //    vector<int> nums1 = {1, 5, 3, 2};
 //    vector<int> nums2 = {2, 4, 6};
