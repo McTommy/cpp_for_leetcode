@@ -7,5 +7,8 @@ set(
         SOURCE_FILES main.cpp
         leetcode/list/LinkedList.cpp
         leetcode/list/LinkedListStructure.h
-        leetcode/list/LinkedListHelper.cpp)
+        leetcode/list/LinkedListHelper.cpp
+
+        leetcode/stackAndQueue/stackAndQueue.cpp
+        leetcode/stackAndQueue/stackAndQueueHelper.cpp leetcode/recursion/recursionAndTree.cpp leetcode/stackAndQueue/structure.h)
 add_executable(algorithm ${SOURCE_FILES})
