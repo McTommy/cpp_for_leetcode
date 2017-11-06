@@ -4,7 +4,10 @@
 #include <iostream>
 #include <queue>
 #include <cmath>
+#include <stack>
 #include <numeric>
+#include <algorithm>
+#include <cassert>
 
 #include "../stackAndQueue/structure.h"
 
@@ -13,6 +16,20 @@ using namespace std;
 namespace recursionAndTree {
     class Solution {
     private:
+        vector<string> res;
+        const string letterMap[10] = {
+                " ",
+                "",
+                "abc",
+                "def",
+                "ghi",
+                "jkl",
+                "mno",
+                "pqrs",
+                "tuv",
+                "wxyz",
+        };
+
         bool isSymmetricHelper(TreeNode *p, TreeNode *q) {
             if (!p and !q)
                 return true;
@@ -50,6 +67,58 @@ namespace recursionAndTree {
             res += findPath(node->left, sum - node->val);
             res += findPath(node->right, sum - node->val);
             return res;
+        }
+
+        bool isValidBST(TreeNode *node, TreeNode *minNode, TreeNode *maxNode) {
+            if (!node) return true;
+            if (minNode && node->val <= minNode->val || maxNode && node->val >= maxNode->val)
+                return false;
+            return isValidBST(node->left, minNode, node) && isValidBST(node->right, node, maxNode);
+        }
+
+        void findComb(const string &digits, int index, const string &s) {
+
+            if (index == digits.size()) {
+                res.push_back(s);
+                return;
+            }
+            char c = digits[index];
+            string letters = letterMap[c - '0'];
+            for (auto i : letters) {
+                findComb(digits, index + 1, s + i);
+            }
+        }
+
+        void findPermutation(vector<int> nums, int index, int k, vector<vector<int>> &res) {
+            if (index == k - 1) {
+                res.push_back(nums);
+                return;
+            }
+            for (int i = index; i < k; i++) {
+                if (i != index && nums[i] == nums[index]) continue;
+                swap(nums[i], nums[index]);
+                findPermutation(nums, index + 1, k, res);
+            }
+        }
+
+        void findPartition(string &s, int index, vector<string> &p, vector<vector<string>> &res) {
+            if (index == s.length()) {
+                res.push_back(p);
+                return;
+            }
+            for (int i = index; i < s.length(); i++) {
+                if (isPalindrome(s, index, i)) {
+                    p.push_back(s.substr(index, i - index + 1));
+                    findPartition(s, i + 1, p, res);
+                    p.pop_back();
+                }
+            }
+        }
+        bool isPalindrome(const string &s, int begin, int end) {
+            while(begin < end)
+                if (s[begin++] != s[end--])
+                    return false;
+            return true;
         }
 
     public:
@@ -265,7 +334,116 @@ namespace recursionAndTree {
         }
 
         TreeNode *lowestCommonAncestor(TreeNode *root, TreeNode *p, TreeNode *q) {
+            if (!root) return root;
 
+            if (p->val < root->val and q->val < root->val)
+                return lowestCommonAncestor(root->left, p, q);
+            if (p->val > root->val and q->val > root->val)
+                return lowestCommonAncestor(root->right, p, q);
+
+            return root;
+        }
+
+        bool isValidBST(TreeNode *root) {
+            return isValidBST(root, nullptr, nullptr);
+        }
+
+        TreeNode *deleteNode(TreeNode *root, int key) {
+            if (!root) return root;
+            if (root->val == key) {
+                if (!root->right) {
+                    TreeNode *left = root->left;
+                    delete root;
+                    return left;
+                } else {
+                    TreeNode *right = root->right;
+                    while (right->left)
+                        right = right->left;
+                    swap(right->val, root->val);
+                }
+            }
+            root->left = deleteNode(root->left, key);
+            root->right = deleteNode(root->right, key);
+            return root;
+        }
+
+        TreeNode *sortedArrayToBST(vector<int> &nums) {
+            if (nums.empty()) return nullptr;
+            if (nums.size() == 1) return new TreeNode(nums[0]);
+
+            int middle = nums.size() / 2;
+            auto *root = new TreeNode(nums[middle]);
+
+            vector<int> left(nums.begin(), nums.begin() + middle);
+            vector<int> right(nums.begin() + middle + 1, nums.end());
+
+            root->left = sortedArrayToBST(left);
+            root->right = sortedArrayToBST(right);
+
+            return root;
+        }
+
+        int kthSmallest(TreeNode *root, int k) {
+            stack<TreeNode *> stack1;
+
+            TreeNode *p = root;
+            while (p || !stack1.empty()) {
+                while (p) {
+                    stack1.push(p);
+                    p = p->left;
+                }
+                p = stack1.top();
+                if (k - 1 == 0)
+                    return p->val;
+                stack1.pop();
+                k--;
+                p = p->right;
+            }
+        }
+
+        vector<string> letterCombinations(string digits) {
+            res.clear();
+            if (digits.empty())
+                return res;
+            findComb(digits, 0, "");
+            return res;
+        }
+
+        vector<vector<int>> permuteUnique(vector<int> &nums) {
+            sort(nums.begin(), nums.end());
+            vector<vector<int>> res;
+            if (nums.empty())
+                return res;
+            findPermutation(nums, 0, nums.size(), res);
+            return res;
+        }
+
+        vector<string> restoreIpAddresses(string s) {
+            vector<string> res;
+            string ans;
+            for (int a = 1; a <= 3; a++)
+                for (int b = 1; b <= 3; b++)
+                    for (int c = 1; c <= 3; c++)
+                        for (int d = 1; d <= 3; d++)
+                            if (a + b + c + d == s.length()) {
+                                int A = stoi(s.substr(0, a));
+                                int B = stoi(s.substr(a, b));
+                                int C = stoi(s.substr(a + b, c));
+                                int D = stoi(s.substr(a + b + c, d));
+                                if (A <= 255 && B <= 255 && C <= 255 && D <= 255)
+                                    if ((ans = to_string(A) + "." + to_string(B) + "." + to_string(C) + "." +
+                                               to_string(D)).length() == s.length() + 3)
+                                        res.push_back(ans);
+                            }
+            return res;
+        }
+
+        vector<vector<string>> partition(string s) {
+            vector<vector<string>> res;
+            vector<string> p;
+            if (s.empty()) return res;
+            findPartition(s, 0, p, res);
+            return res;
         }
     };
 }
