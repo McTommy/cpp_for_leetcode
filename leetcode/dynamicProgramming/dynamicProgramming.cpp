@@ -303,5 +303,133 @@ namespace dynamicProgramming {
                 }
             return memo[c];
         }
+
+        int coinChange(vector<int> &coins, int amount) {
+            int size = amount + 1;
+            vector<int> bag(size, amount + 1);
+
+            bag[0] = 0;
+            for (int i = 1; i <= amount; i++)
+                for (auto j : coins) {
+                    if (j <= i) {
+                        bag[i] = min(bag[i], bag[i - j] + 1);
+                    }
+                }
+            return bag[amount] > amount ? -1 : bag[amount];
+        }
+
+        int combinationSum4(vector<int> &nums, int target) {
+            vector<int> res(target + 1, 0);
+            res[0] = 1;
+
+            for (int i = 1; i <= target; i++)
+                for (auto j : nums)
+                    if (j <= i) {
+                        res[i] += res[i - j];
+                    }
+            return res[target];
+        }
+
+        int findMaxForm(vector<string> &strs, int m, int n) {
+            vector<vector<int>> res(m + 1, vector<int>(n + 1, 0));
+            int numZeros, numOnes;
+
+            for (auto s : strs) {
+                numZeros = 0, numOnes = 0;
+                for (auto c : s) {
+                    if (c == '0')
+                        numZeros++;
+                    else if (c == '1')
+                        numOnes++;
+                }
+
+                for (int i = m; i >= numZeros; i--)
+                    for (int j = n; j >= numOnes; j--)
+                        res[i][j] = max(res[i][j], res[i - numZeros][j - numOnes] + 1);
+            }
+
+            return res[m][n];
+        }
+
+        bool wordBreak(string s, vector<string> &wordDict) {
+            vector<bool> res(s.size() + 1, false);
+            res[0] = true;
+
+            for (int i = 1; i <= s.size(); i++)
+                for (int j = i - 1; j >= 0; j--) {
+                    if (res[j]) {
+                        string sub = s.substr(j, i - j);
+                        if (find(wordDict.begin(), wordDict.end(), sub) != wordDict.end())
+                            res[i] = true;
+                    }
+                }
+            return res[s.size()];
+        }
+
+        int findTargetSumWays(vector<int> &nums, int S) {
+            int sum = accumulate(nums.begin(), nums.end(), 0);
+            if (S > sum || S < -sum)
+                return 0;
+            vector<int> res(2 * sum + 1, 0);
+            res[sum] = 1;
+
+            for (int num : nums) {
+                vector<int> temp(2 * sum + 1, 0);
+                for (int j = 0; j < 2 * sum + 1; j++) {
+                    if (res[j]) {
+                        temp[j - num] += res[j];
+                        temp[j + num] += res[j];
+                    }
+                }
+                res = temp;
+            }
+
+            return res[S + sum];
+        }
+
+        //最长上升子序列
+        int lengthOfLIS(vector<int> &nums) {
+            if (nums.size() == 0)
+                return 0;
+            vector<int> memo(nums.size(), 1);
+
+            for (int i = 1; i < nums.size(); i++)
+                for (int j = 0; j < i; j++)
+                    if (nums[j] < nums[i])
+                        memo[i] = max(memo[i], 1 + memo[j]);
+            int res = 1;
+            for (auto i : memo)
+                res = max(res, i);
+            return res;
+        }
+
+        int wiggleMaxLength(vector<int> &nums) {
+            auto size = static_cast<int>(nums.size());
+            if (size < 2) return size;
+
+            vector<int> up(size, 0);
+            vector<int> down(size, 0);
+
+            up[0] = 1;
+            down[0] = 1;
+
+            for (int i = 1; i < size; i++) {
+                if (nums[i] > nums[i-1]) {
+                    up[i] = down[i-1] + 1;
+                    down[i] = down[i-1];
+                } else if (nums[i] < nums[i-1]) {
+                    up[i] = up[i-1];
+                    down[i] = up[i-1] + 1;
+                } else {
+                    up[i] = up[i-1];
+                    down[i] = down[i-1];
+                }
+            }
+
+            return max(up[size-1], down[size-1]);
+        }
+
+        //lcs longest common sequence
+        //dijkstra
     };
 }

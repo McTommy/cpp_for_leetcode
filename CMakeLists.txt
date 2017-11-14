@@ -10,5 +10,5 @@ set(
         leetcode/list/LinkedListHelper.cpp
 
         leetcode/stackAndQueue/stackAndQueue.cpp
-        leetcode/stackAndQueue/stackAndQueueHelper.cpp leetcode/recursion/recursionAndTree.cpp leetcode/stackAndQueue/structure.h leetcode/dynamicProgramming/dynamicProgramming.cpp)
+        leetcode/stackAndQueue/stackAndQueueHelper.cpp leetcode/recursion/recursionAndTree.cpp leetcode/stackAndQueue/structure.h leetcode/dynamicProgramming/dynamicProgramming.cpp leetcode/greedy/greedy.cpp)
 add_executable(algorithm ${SOURCE_FILES})
