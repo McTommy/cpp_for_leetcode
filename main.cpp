@@ -1,31 +1,43 @@
 #include <iostream>
-#include <stack>
-#include <queue>
-
-#include "leetcode/list/LinkedList.cpp"
-#include "leetcode/list/LinkedListHelper.cpp"
-
-#include "leetcode/stackAndQueue/stackAndQueue.cpp"
-#include "leetcode/stackAndQueue/stackAndQueueHelper.cpp"
-
-#include "leetcode/recursion/recursionAndTree.cpp"
-#include "leetcode/dynamicProgramming/dynamicProgramming.cpp"
-#include "leetcode/greedy/greedy.cpp"
+#include <string>
+#include <vector>
+#include "leetcode_new/array/myArray.cpp"
+#include "leetcode_new/search/mySearch.cpp"
 
 using namespace std;
 
-int main() {
-    greedy::Solution solution = greedy::Solution();
-    int result;
-//    vector<vector<int> > test = {{1, 2, 5}, {3, 2, 1}};
-//    string string1 = "";
-    vector<string> strs = {"10", "0001", "111001", "1", "0"};
-    vector<int> nums = {1, 1 ,1 ,1 ,1};
-    int m  = 5, n = 3;
-    result = 1;
-    if (find(strs.begin(), strs.end(), "1") != strs.end()){
-        cout << result << endl;
+int test(int n) {
+    int sum = 0;
+    while (n != 0) {
+        int number = n % 10;
+        sum += number * number;
+        n = n / 10;
     }
+    return sum;
+}
+
+int main() {
+    //solution
+    myArray::Solution solution = myArray::Solution();
+    mySearch::Solution searchSolution = mySearch::Solution();
+    //test data
+    vector<int> testArray = {-1, 0, 1, 2, -1, -4};
+//    string string1 = "Op";
+//    string string1 = "abcabcbb";
+
+    //test function
+    auto result = searchSolution.threeSum(testArray);
+//    bool result = solution.isOneBitCharacter(testArray);
+//    vector<int> result = solution.twoSum(testArray, 19);
+//    solution.sortColors(testArray);
+//    bool result = solution.isPalindrome(string1);
+
+    //show result
+    for (auto i : result)
+        for (auto j : i)
+            cout << j << endl;
+//    cout << result <<endl;
 
     return 0;
 }
+
