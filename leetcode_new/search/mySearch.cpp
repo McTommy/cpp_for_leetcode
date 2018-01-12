@@ -198,11 +198,60 @@ namespace mySearch {
         //16. 3Sum Closest
         int threeSumClosest(vector<int> &nums, int target) {
             int nums_size = nums.size();
-            if (nums_size == 3)
-                return nums[0] + nums[1] + nums[2];
+            int closest = nums[0] + nums[1] + nums[2];
 
             sort(nums.begin(), nums.end());
+            for (int first = 0; first < nums_size - 2; first++) {
+                if (first > 0 && nums[first] == nums[first - 1]) continue;
+                int second = first + 1;
+                int third = nums_size - 1;
+                while (second < third) {
+                    int curSum = nums[first] + nums[second] + nums[third];
+                    if (curSum == target) return curSum;
+                    if (abs(target - curSum) < abs(target - closest))
+                        closest = curSum;
+
+                    if (curSum > target) third--;
+                    else second++;
+                }
+            }
+            return closest;
         }
+
+        //454. 4Sum II
+        int fourSumCount(vector<int> &A, vector<int> &B, vector<int> &C, vector<int> &D) {
+            unordered_map<int, int> record;
+            for (auto i : C)
+                for (auto j : D)
+                    record[i + j]++;
+
+            int res = 0;
+            for (auto i : A)
+                for (auto j : B)
+                    if (record.find(-i - j) != record.end())
+                        res += record[-i - j];
+            return res;
+        }
+
+        //447. Number of Boomerangs
+        int numberOfBoomerangs(vector<pair<int, int>> &points) {
+            int res = 0;
+            for (int i = 0; i < points.size(); i++) {
+                unordered_map<int, int> record;
+                for (int j = 0; j < points.size(); j++) {
+                    if (i != j) {
+                        auto dis = (points[i].first - points[j].first) * (points[i].first - points[j].first) +
+                                   (points[i].second - points[j].second) * (points[i].second - points[j].second);
+                        record[dis]++;
+                    }
+                }
+                for (auto r : record) {
+                    res += r.second * (r.second - 1);
+                }
+            }
+            return res;
+        }
+
 
     private:
         int eachNumberSquareSum(int n) {
