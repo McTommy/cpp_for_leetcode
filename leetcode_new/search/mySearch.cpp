@@ -8,6 +8,8 @@
 #include <sstream>
 #include <map>
 #include <algorithm>
+#include <set>
+#include <queue>
 
 using namespace std;
 
@@ -250,6 +252,37 @@ namespace mySearch {
                 }
             }
             return res;
+        }
+
+        //219. Contains Duplicate II
+        bool containsNearbyDuplicate(vector<int>& nums, int k) {
+            if (nums.size() < 2) return false;
+            unordered_set<int> record;
+
+            for (int i = 0; i < nums.size(); i++) {
+                if (record.find(nums[i]) != record.end())
+                    return true;
+                record.insert(nums[i]);
+                if (record.size() == k + 1)
+                    record.erase(nums[i-k]);
+            }
+            return false;
+        }
+
+        //220. Contains Duplicate III
+        bool containsNearbyAlmostDuplicate(vector<int>& nums, int k, int t) {
+            if (nums.size() < 2) return false;
+            set<long long> record;
+
+            for (int i = 0; i < nums.size(); i++) {
+                if (record.lower_bound((long long)nums[i] - (long long)t) != record.end()
+                    && *record.lower_bound((long long)nums[i] - (long long)nums[i] + (long long)t))
+                    return true;
+                record.insert((long long)nums[i]);
+                if (record.size() == (k + 1))
+                    record.erase(nums[i - k]);
+            }
+            return false;
         }
 
 
