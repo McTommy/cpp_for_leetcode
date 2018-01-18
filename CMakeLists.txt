@@ -9,5 +9,5 @@ set(
         leetcode_new/search/mySearch.cpp
         leetcode_new/myQueue/myQueue.cpp
         leetcode_new/recursion/recursionAndTree.cpp
-        leetcode_new/myList/LinkedList.cpp)
+        leetcode_new/myList/LinkedList.cpp leetcode_new/dataStructure.cpp)
 add_executable(algorithm ${SOURCE_FILES})
